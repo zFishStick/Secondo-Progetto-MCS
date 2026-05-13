@@ -1,14 +1,14 @@
-import copy
 from matplotlib import colormaps, image
 from matplotlib.colors import Normalize, to_hex
-import os
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import filedialog
 from tkinter import messagebox 
+from sympy import root
+
 import io
 
-from sympy import root
+from dct2_calculator import calculate_dct2
 
 class ZoomPanCanvas(tk.Canvas):
 
@@ -110,7 +110,7 @@ def set_cut_threshold(entry, block_size):
         messagebox.showerror("Errore", "Soglia taglio non valida. Inserisci un numero intero.")
         return None
     
-def execute_conversion(block_size_entry, cut_threshold_entry, canvas_bmp):
+def execute_conversion(block_size_entry, cut_threshold_entry, canvas_bmp, canvas_jpeg):
     try:
         block_size = set_block_size(block_size_entry)
         if block_size is None:
@@ -125,6 +125,10 @@ def execute_conversion(block_size_entry, cut_threshold_entry, canvas_bmp):
             messagebox.showerror("Errore", "Nessuna immagine caricata. Carica un'immagine bmp prima di eseguire la conversione.")
             return  
         
+        result = calculate_dct2(block_size, cut_threshold, canvas_bmp.original_image)
+        canvas_jpeg.load_image_from_bytes(result)
+        print("Conversione eseguita con successo.")
+
     except ValueError:
         messagebox.showerror("Errore", "Inserisci tutti i parametri per eseguire la conversione.")
         return
@@ -166,7 +170,7 @@ def main():
     cut_treshold_label.pack(side=tk.LEFT, padx=5, pady=5)
     cut_treshold_entry.pack(side=tk.LEFT, padx=5, pady=5)
     
-    execute_button = tk.Button(toolbar, text="Esegui conversione", command=lambda: execute_conversion(block_size_entry, cut_treshold_entry, canvas_bmp))
+    execute_button = tk.Button(toolbar, text="Esegui conversione", command=lambda: execute_conversion(block_size_entry, cut_treshold_entry, canvas_bmp, canvas_jpeg))
     execute_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     root.mainloop()
