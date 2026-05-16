@@ -32,7 +32,13 @@ def run_benchmark():
         t_f = time.time() - start
         times_fast.append(t_f)
 
-        print(f"{N:<10} | {t_m:<15.6f} | {t_f:<15.6f}")
+        c_manual = t_m / (N**3)
+        # Per la FFT/DCT 2D su matrice N x N, la complessità è N * (N log N) per le righe 
+        # + N * (N log N) per le colonne, quindi l'ordine di grandezza è N^2 * log(N)
+        c_fast = t_f / ((N**2) * np.log2(N))
+
+        print(f"{N:<5} | {t_m:<10.5f} (C={c_manual:.2e}) | {t_f:<10.5f} (C={c_fast:.2e})")
+
 
     # --- GENERAZIONE GRAFICO ---
     
@@ -45,7 +51,7 @@ def run_benchmark():
     plt.title('Confronto Tempi di Esecuzione DCT2')
     plt.xlabel('Dimensione del lato della matrice (N)')
     plt.ylabel('Tempo (secondi) - Scala Log')
-    plt.grid(True, which="both", ls="-", alpha=0.5)
+    plt.grid()
     plt.legend()
     
     plt.show()
