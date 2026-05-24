@@ -15,10 +15,10 @@ def test_dct_2D():
 
 def test_dct_1D():
     f_vect = np.array([231, 32, 233, 161, 24, 71, 140, 245])
-    c_1d = dctn(f_vect, type=1, norm='ortho')
+    c_1d = dctn(f_vect, type=2, norm='ortho')
     print("Vettore dei coefficienti DCT1:")
     print(np.round(c_1d, 2))
 
 if __name__ == "__main__":
-    #test_dct_2D()
+    test_dct_2D()
     test_dct_1D()
