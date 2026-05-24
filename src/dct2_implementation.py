@@ -12,6 +12,7 @@ def compute_D(N):
         for i in range(N):
             D[k, i] = alpha_vect[k] * np.cos((k * np.pi * (2*i + 1)) / (2*N))
     return D
+
 # Questa non serve ma l'ho messa per ora per chiarezza, poi la eliminerò
 def dct_1D(f_vect):
     N = len(f_vect)
