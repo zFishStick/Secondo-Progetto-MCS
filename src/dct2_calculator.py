@@ -1,39 +1,52 @@
-from tkinter import Image
-
-from scipy.fft import dctn, idctn
+import io
 import numpy as np
-import matplotlib.pyplot as plt
-
+from scipy.fft import dctn, idctn
 import PIL.Image as Image
 
-def calculate_dct2(F, cut_threshold, img):
-    print("Calcolo DCT2...")
-    print("Soglia taglio: ", cut_threshold)
-    print("Immagine: ", img)
-    
-    numpy_image = np.array(img)    
-    
-    row, col = F, F
-    
-    row_blocks = row // F
-    col_blocks = col // F
-       
-    c = dctn(numpy_image, type=2, norm='ortho')
-        
-    for k in range(row_blocks):
-        for l in range(col_blocks):
-            if (k + l) >= cut_threshold:
-                c[k, l] = 0 # type: ignore
-                
-    ff = idctn(c, type=2, norm='ortho').round().astype(int) # type: ignore
-    ff[ff < 0] = 0
-    ff[ff > 255] = 255
-    
-    print("DCT2 calcolata: ", ff)
-    
-    image = Image.fromarray(ff.astype('uint8')) # type: ignore
-    image.show()
-    return image
 
+def calculate_dct2(F: int, cut_threshold: int, img: Image.Image) -> bytes:
 
-calculate_dct2(8, 4, Image.open("./immagini/tonypitony.bmp"))
+    img_gray = img.convert('L')
+    numpy_image = np.array(img_gray, dtype=float)
+
+    H, W = numpy_image.shape
+
+    # Suddivide l'immagine in blocchi e scarta gli avanzi
+    n_row_blocks = H // F
+    n_col_blocks = W // F
+
+    H_crop = n_row_blocks * F
+    W_crop = n_col_blocks * F
+    cropped = numpy_image[:H_crop, :W_crop] # Immagine senza gli avanzi
+
+    print(f"Immagine originale: {W}x{H} pixel")
+    print(f"Dimensione blocco: {F}x{F} pixel")
+    print(f"Numero di blocchi: {n_row_blocks}x{n_col_blocks} = {n_row_blocks * n_col_blocks}")
+    print(f"Immagine ritagliata: {W_crop}x{H_crop} pixel (avanzi scartati: {H - H_crop} righe, {W - W_crop} colonne)")
+
+    result = np.empty_like(cropped) # Array vuoto per i risultati
+
+    for i in range(n_row_blocks):
+        for j in range(n_col_blocks):
+
+            # Estrae il blocco F x F (i*F = inizio, (i+1)*F = fine)
+            block = cropped[i*F:(i+1)*F, j*F:(j+1)*F]
+
+            c = dctn(block, type=2, norm='ortho')
+
+            for k in range(F):
+                for l in range(F):
+                    if k + l >= cut_threshold:
+                        c[k, l] = 0 # type: ignore
+
+            # DCT2 inversa
+            ff = idctn(c, type=2, norm='ortho')
+
+            ff = np.clip(np.round(ff), 0, 255) # type: ignore
+
+            result[i*F:(i+1)*F, j*F:(j+1)*F] = ff
+
+    result_image = Image.fromarray(result.astype('uint8'), mode='L')
+    buffer = io.BytesIO()
+    result_image.save(buffer, format='PNG')
+    return buffer.getvalue()
