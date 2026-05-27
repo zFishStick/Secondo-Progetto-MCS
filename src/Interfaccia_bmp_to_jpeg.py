@@ -98,6 +98,18 @@ def execute_conversion(block_size_entry, cut_threshold_entry,
     result_bytes = calculate_dct2(F, d, canvas_bmp.original_image)
     canvas_jpeg.load_image_from_bytes(result_bytes)
     print("Conversione eseguita con successo.")
+    
+    # Salva l'immagine risultante in un file JPEG
+    save_path = filedialog.asksaveasfilename(
+        title="Salva immagine compressa",
+        defaultextension=".jpg",
+        filetypes=[("File JPEG", "*.jpg"), ("Tutti i file", "*.*")],
+    )
+    
+    if save_path:
+        with open(save_path, "wb") as f:
+            f.write(result_bytes)
+        print(f"Immagine compressa salvata come: {save_path}")
 
 
 def main():
