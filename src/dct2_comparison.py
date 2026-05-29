@@ -50,6 +50,9 @@ def run_benchmark():
     plt.grid()
     plt.legend()
     
+    plt.savefig("benchmark_dct2.png", dpi=300, bbox_inches='tight')
+
+
     plt.show()
 
 if __name__ == "__main__":
