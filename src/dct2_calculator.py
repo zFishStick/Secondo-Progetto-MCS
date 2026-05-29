@@ -19,10 +19,10 @@ def calculate_dct2(F: int, cut_threshold: int, img: Image.Image) -> bytes:
     W_crop = n_col_blocks * F
     cropped = numpy_image[:H_crop, :W_crop] # Immagine senza gli avanzi
 
-    print(f"Immagine originale: {W}x{H} pixel")
-    print(f"Dimensione blocco: {F}x{F} pixel")
+    print("\n")
     print(f"Numero di blocchi: {n_row_blocks}x{n_col_blocks} = {n_row_blocks * n_col_blocks}")
     print(f"Immagine ritagliata: {W_crop}x{H_crop} pixel (avanzi scartati: {H - H_crop} righe, {W - W_crop} colonne)")
+    print("\n")
 
     result = np.empty_like(cropped) # Array vuoto per i risultati
 

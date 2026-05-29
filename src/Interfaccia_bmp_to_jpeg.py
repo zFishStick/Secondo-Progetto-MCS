@@ -70,6 +70,9 @@ def select_file(canvas: ZoomPanCanvas):
     )
     if filepath:
         canvas.load_image(filepath)
+        print(f"Immagine caricata: {filepath}")
+        print(f"Dimensione immagine: {canvas.original_image.width}x{canvas.original_image.height} pixel") # type: ignore
+        print(f"Dimensione immagine (Mb): {canvas.original_image.width * canvas.original_image.height * len(canvas.original_image.getbands()) / (1024 * 1024):.2f} MB") # type: ignore
 
 
 def execute_conversion(block_size_entry, cut_threshold_entry,
@@ -98,6 +101,8 @@ def execute_conversion(block_size_entry, cut_threshold_entry,
     result_bytes = calculate_dct2(F, d, canvas_bmp.original_image)
     canvas_jpeg.load_image_from_bytes(result_bytes)
     print("Conversione eseguita con successo.")
+    print(f"Dimensione immagine originale: {canvas_bmp.original_image.width}x{canvas_bmp.original_image.height} pixel") # type: ignore
+    print(f"Dimensione immagine compressa: {len(result_bytes) / (1024 * 1024):.2f} MB")
     
     # Salva l'immagine risultante in un file JPEG
     save_path = filedialog.asksaveasfilename(
