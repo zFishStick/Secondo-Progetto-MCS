@@ -104,19 +104,23 @@ def execute_conversion(block_size_entry, cut_threshold_entry,
     print(f"Dimensione immagine originale: {canvas_bmp.original_image.width}x{canvas_bmp.original_image.height} pixel") # type: ignore
     print(f"Dimensione immagine compressa: {len(result_bytes) / (1024 * 1024):.2f} MB")
     
-    # Salva l'immagine risultante in un file JPEG
+
+def save_compressed_image(canva):
+    if canva.original_image is None:
+        messagebox.showerror("Errore", "Nessuna immagine da salvare.")
+        return
+    
     save_path = filedialog.asksaveasfilename(
         title="Salva immagine compressa",
-        defaultextension=".jpg",
-        filetypes=[("File JPEG", "*.jpg"), ("Tutti i file", "*.*")],
+        defaultextension=".png",
+        filetypes=[("File PNG", "*.png")]
     )
-    
+
     if save_path:
-        with open(save_path, "wb") as f:
-            f.write(result_bytes)
+        canva.original_image.save(save_path, format="PNG")
         print(f"Immagine compressa salvata come: {save_path}")
 
-
+        
 def main():
     root = tk.Tk()
     root.title("Compressione DCT2 – Progetto MCS")
@@ -155,6 +159,11 @@ def main():
         command=lambda: execute_conversion(
             block_size_entry, cut_threshold_entry, canvas_bmp, canvas_jpeg
         )
+    ).pack(side=tk.LEFT, padx=10, pady=5)
+
+    tk.Button(
+        toolbar, text="Salva immagine compressa",
+        command=lambda: save_compressed_image(canvas_jpeg)
     ).pack(side=tk.LEFT, padx=10, pady=5)
 
     root.mainloop()
