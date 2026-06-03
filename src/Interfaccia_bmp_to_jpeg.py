@@ -101,8 +101,6 @@ def execute_conversion(block_size_entry, cut_threshold_entry,
     result_bytes = calculate_dct2(F, d, canvas_bmp.original_image)
     canvas_jpeg.load_image_from_bytes(result_bytes)
     print("Conversione eseguita con successo.")
-    print(f"Dimensione immagine originale: {canvas_bmp.original_image.width}x{canvas_bmp.original_image.height} pixel") # type: ignore
-    print(f"Dimensione immagine compressa: {len(result_bytes) / (1024 * 1024):.2f} MB")
     
 
 def save_compressed_image(canva):
