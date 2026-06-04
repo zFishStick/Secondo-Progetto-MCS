@@ -71,8 +71,16 @@ def select_file(canvas: ZoomPanCanvas):
     if filepath:
         canvas.load_image(filepath)
         print(f"Immagine caricata: {filepath}")
-        print(f"Dimensione immagine: {canvas.original_image.width}x{canvas.original_image.height} pixel") # type: ignore
-        print(f"Dimensione immagine (Mb): {canvas.original_image.width * canvas.original_image.height * len(canvas.original_image.getbands()) / (1024 * 1024):.2f} MB") # type: ignore
+        
+        buffer = io.BytesIO()
+        png_image = canvas.original_image.convert("L") # type: ignore
+        png_image.save(buffer, format='png') # type: ignore
+        
+        size_mb = len(buffer.getvalue()) / (1024 * 1024)
+        size_kb = len(buffer.getvalue()) / 1024
+        
+        print(f"Dimensione immagine: {png_image.width}x{png_image.height} pixel") # type: ignore
+        print(f"Dimensione immagine (Mb): {size_mb:.2f} MB, ({size_kb:.2f} KB)") # type: ignore
 
 
 def execute_conversion(block_size_entry, cut_threshold_entry,

@@ -49,7 +49,10 @@ def calculate_dct2(F: int, cut_threshold: int, img: Image.Image) -> bytes:
     result_image = Image.fromarray(result.astype('uint8'), mode='L')
     buffer = io.BytesIO()
     result_image.save(buffer, format='png')
+    
+    size_mb = len(buffer.getvalue()) / (1024 * 1024)
+    size_kb = len(buffer.getvalue()) / 1024
 
-    print(f"Peso finale con soglia d={cut_threshold}: {len(buffer.getvalue()) / 1024:.2f} KB")
+    print(f"Peso finale con soglia d={cut_threshold}: {size_mb:.2f} MB, ({size_kb:.2f} KB)")
 
     return buffer.getvalue()
