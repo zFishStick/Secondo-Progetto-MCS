@@ -11,13 +11,13 @@ def test_dct_2D():
                       [87, 149, 57, 192, 65, 129, 178, 228]])
     c_2d = dctn(f_mat, type=2, norm='ortho')
     print("Matrice dei coefficienti DCT2:")
-    print(np.round(c_2d, 2))
+    print(np.round(c_2d, 2)) # type: ignore
 
 def test_dct_1D():
     f_vect = np.array([231, 32, 233, 161, 24, 71, 140, 245])
     c_1d = dctn(f_vect, type=2, norm='ortho')
     print("Vettore dei coefficienti DCT1:")
-    print(np.round(c_1d, 2))
+    print(np.round(c_1d, 2)) # type: ignore
 
 if __name__ == "__main__":
     test_dct_2D()

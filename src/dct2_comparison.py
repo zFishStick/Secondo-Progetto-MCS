@@ -42,7 +42,7 @@ def run_benchmark():
    
      # Scala semilogaritmica
     plt.plot(N_sizes, times_manual, 'o-', label='DCT2 Fatta in casa ($O(N^3)$)', linewidth=2)
-    plt.plot(N_sizes, times_fast, 's-', label='DCT2 Scipy Fast ($O(N^2 \log N)$)', linewidth=2)
+    plt.plot(N_sizes, times_fast, 's-', label='DCT2 Scipy Fast ($O(N^2 \log N)$)', linewidth=2) # type: ignore
     plt.yscale('log')
     plt.title('Confronto Tempi di Esecuzione DCT2')
     plt.xlabel('Dimensione del lato della matrice (N)')
